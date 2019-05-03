@@ -5,13 +5,14 @@ from tqdm import tqdm
 def parallel_generate_walks(d_graph, global_walk_length, num_walks, cpu_num, sampling_strategy=None,
                             num_walks_key=None, walk_length_key=None, neighbors_key=None, probabilities_key=None,
                             first_travel_key=None, quiet=False):
+
+
     """
     Generates the random walks which will be used as the skip-gram input.
     :return: List of walks. Each walk is a list of nodes.
     """
 
     walks = list()
-
 
 
     if not quiet:
