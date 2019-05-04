@@ -3,6 +3,8 @@ from random import sample
 from parallel import *
 from node2vec import Node2Vec
 import os
+import pandas as pd
+from collections import defaultdict
 
 class Utils:
 
@@ -58,6 +60,17 @@ class Utils:
 u = Utils()
 dir = os.getcwd()
 g = u.read_graph('../datasets/collegedataset_75.txt')
+
+df1 = pd.read_csv('../datasets/collegedataset_75.txt', columns = ['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
+
+has_cold_started = set()
+cold_started_with = defaultdict(list)
+# all the connections
+for index, row in df1.iterrows():
+    if row["v1"] not in has_cold_started:
+        has_cold_started.add(row["v1"])
+        cold_started_with[row["v2"]].append((row["v1"], row["timestamp"]))
+
 n2v = Node2Vec(g, is_temporal=True, model_file="model.n2v")
 # n2v = Node2Vec(g, is_temporal=True)
 i = j = 0
