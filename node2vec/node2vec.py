@@ -4,9 +4,14 @@ import gensim, os
 from joblib import Parallel, delayed, load, dump
 from tqdm import tqdm
 from .parallel import parallel_generate_walks
+import networkx as nx
 
 
 class Node2Vec:
+    """
+    Given the entire history of the graph, see which nodes are cold starts right now, and which ones are not, and
+    generate either our embedding, or node2vec
+    """
     FIRST_TRAVEL_KEY = 'first_travel_key'
     PROBABILITIES_KEY = 'probabilities'
     NEIGHBORS_KEY = 'neighbors'
@@ -16,8 +21,9 @@ class Node2Vec:
     P_KEY = 'p'
     Q_KEY = 'q'
 
+
     def __init__(self, graph, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='weight',
-                 workers=1, sampling_strategy=None, quiet=False, temp_folder=None):
+                 workers=1, sampling_strategy=None, quiet=False, temp_folder=None, is_temporal=False):
         """
         Initiates the Node2Vec object, precomputes walking probabilities and generates the walks.
 
@@ -53,7 +59,13 @@ class Node2Vec:
         self.workers = workers
         self.quiet = quiet
         self.d_graph = defaultdict(dict)
+        self.is_temporal = is_temporal
 
+        self.cold_starts = set()
+
+
+        if self.is_temporal is True:
+            self._initialize_temporal_structures()
         if sampling_strategy is None:
             self.sampling_strategy = {}
         else:
@@ -69,8 +81,24 @@ class Node2Vec:
 
         self._precompute_probabilities()
         self.walks = self._generate_walks()
+    def _initialize_temporal_structures(self):
+        """
+        initialize the forward and reverse dictionaries for the current graph
+        :return:
+
+        """
+        for node in self.graph.nodes():
+            if self.graph.out_degree(node) == 1:
+                self.cold_starts.add(node)
+
+    def maintain_embeddings(self):
+        """
+        figures out when a node stops being cold start, and recomputes its embedding using node2vec
+        :return:
+        """
 
     def _precompute_probabilities(self):
+
         """
         Precomputes transition probabilities for each node.
         """
