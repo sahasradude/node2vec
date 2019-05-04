@@ -1,9 +1,10 @@
 from collections import defaultdict
 import numpy as np
 import gensim, os
+from gensim.models import KeyedVectors
 from joblib import Parallel, delayed, load, dump
 from tqdm import tqdm
-from .parallel import parallel_generate_walks
+from parallel import parallel_generate_walks
 import networkx as nx
 
 
@@ -23,7 +24,7 @@ class Node2Vec:
 
 
     def __init__(self, graph, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='weight',
-                 workers=1, sampling_strategy=None, quiet=False, temp_folder=None, is_temporal=False):
+                 workers=1, sampling_strategy=None, quiet=False, temp_folder=None, is_temporal=False, model_file=None):
         """
         Initiates the Node2Vec object, precomputes walking probabilities and generates the walks.
 
@@ -49,6 +50,7 @@ class Node2Vec:
         :type temp_folder: str
         """
 
+
         self.graph = graph
         self.dimensions = dimensions
         self.walk_length = walk_length
@@ -62,10 +64,17 @@ class Node2Vec:
         self.is_temporal = is_temporal
 
         self.cold_starts = set()
+        self.model = None
+        self.embeddings = None
+        self.model_file = model_file
+
+        if model_file is not None:
+            if not os.path.exists(model_file):
+                print("Model file path does not exist, please check model file path and try again")
+                return
+            self.embedding_file = model_file+".emb"
 
 
-        if self.is_temporal is True:
-            self._initialize_temporal_structures()
         if sampling_strategy is None:
             self.sampling_strategy = {}
         else:
@@ -79,9 +88,9 @@ class Node2Vec:
             self.temp_folder = temp_folder
             self.require = "sharedmem"
 
-        self._precompute_probabilities()
-        self.walks = self._generate_walks()
-    def _initialize_temporal_structures(self):
+        self._initialize_structures()
+
+    def _initialize_structures(self):
         """
         initialize the forward and reverse dictionaries for the current graph
         :return:
@@ -90,6 +99,22 @@ class Node2Vec:
         for node in self.graph.nodes():
             if self.graph.out_degree(node) == 1:
                 self.cold_starts.add(node)
+
+        if self.model_file is None:
+            self._precompute_probabilities()
+            self.walks = self._generate_walks()
+            self.model = self.fit(window=10, min_count=1, batch_words=4)
+            self.model_file = "model.n2v"
+            self.embedding_file = "model.n2v.emb"
+            self.model.save(self.model_file)
+            self.model.wv.save(self.embedding_file)
+
+        else:
+            self.model = KeyedVectors.load(self.model_file, mmap='r')
+            self.embeddings = KeyedVectors.load(self.embedding_file, mmap='r')
+
+
+
 
     def maintain_embeddings(self):
         """
@@ -188,6 +213,7 @@ class Node2Vec:
         walks = flatten(walk_results)
 
         return walks
+
 
     def fit(self, **skip_gram_params):
         """
