@@ -13,8 +13,6 @@ def parallel_generate_walks(d_graph, global_walk_length, num_walks, cpu_num, sam
     """
 
     walks = list()
-
-
     if not quiet:
         pbar = tqdm(total=num_walks, desc='Generating walks (CPU: {})'.format(cpu_num))
 
@@ -27,48 +25,54 @@ def parallel_generate_walks(d_graph, global_walk_length, num_walks, cpu_num, sam
         # Shuffle the nodes
         shuffled_nodes = list(d_graph.keys())
         random.shuffle(shuffled_nodes)
-
-        # Start a random walk from every node
         for source in shuffled_nodes:
-
-            # Skip nodes with specific num_walks
-            if source in sampling_strategy and \
-                    num_walks_key in sampling_strategy[source] and \
-                    sampling_strategy[source][num_walks_key] <= n_walk:
-                continue
-
-            # Start walk
-            walk = [source]
-
-            # Calculate walk length
-            if source in sampling_strategy:
-                walk_length = sampling_strategy[source].get(walk_length_key, global_walk_length)
-            else:
-                walk_length = global_walk_length
-
-            # Perform walk
-            while len(walk) < walk_length:
-
-                walk_options = d_graph[walk[-1]].get(neighbors_key, None)
-
-                # Skip dead end nodes
-                if not walk_options:
-                    break
-
-                if len(walk) == 1:  # For the first step
-                    probabilities = d_graph[walk[-1]][first_travel_key]
-                    walk_to = np.random.choice(walk_options, size=1, p=probabilities)[0]
-                else:
-                    probabilities = d_graph[walk[-1]][probabilities_key][walk[-2]]
-                    walk_to = np.random.choice(walk_options, size=1, p=probabilities)[0]
-
-                walk.append(walk_to)
-
-            walk = list(map(str, walk))  # Convert all to strings
-
+            walk = single_node_random_walk(source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
+                                       global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key)
             walks.append(walk)
 
     if not quiet:
         pbar.close()
 
     return walks
+
+
+def single_node_random_walk(source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
+                            global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key):
+    # Start a random walk at the source node
+
+    # Skip nodes with specific num_walks
+    if source in sampling_strategy and \
+        num_walks_key in sampling_strategy[source] and \
+        sampling_strategy[source][num_walks_key] <= n_walk:
+        return
+
+    # Start walk
+    walk = [source]
+
+    # Calculate walk length
+    if source in sampling_strategy:
+        walk_length = sampling_strategy[source].get(walk_length_key, global_walk_length)
+    else:
+        walk_length = global_walk_length
+
+    # Perform walk
+    while len(walk) < walk_length:
+
+        walk_options = d_graph[walk[-1]].get(neighbors_key, None)
+
+        # Skip dead end nodes
+        if not walk_options:
+            break
+
+        if len(walk) == 1:  # For the first step
+            probabilities = d_graph[walk[-1]][first_travel_key]
+            walk_to = np.random.choice(walk_options, size=1, p=probabilities)[0]
+        else:
+            probabilities = d_graph[walk[-1]][probabilities_key][walk[-2]]
+            walk_to = np.random.choice(walk_options, size=1, p=probabilities)[0]
+
+        walk.append(walk_to)
+
+    walk = list(map(str, walk))  # Convert all to strings
+    return walk
+
