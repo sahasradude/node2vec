@@ -1,10 +1,9 @@
-from parallel import *
 from node2vec import Node2Vec
 
 
 filename = '../datasets/collegedataset_75.txt'
 # n2v = Node2Vec(filename, is_temporal=True, model_file="model.n2v")
-n2v = Node2Vec(filename, is_temporal=True, model_file="model.n2v")
+n2v = Node2Vec(filename, is_temporal=True)
 i = j = 0
 for node in n2v.cold_starts:
     print("--------------------------------------------------")

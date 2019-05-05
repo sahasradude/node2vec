@@ -4,10 +4,11 @@ import gensim, os
 from gensim.models import KeyedVectors
 from joblib import Parallel, delayed, load, dump
 from tqdm import tqdm
-from parallel import parallel_generate_walks
+# from parallel import parallel_generate_walks
 import pandas as pd
 import networkx as nx
 from random import sample
+from random import shuffle
 
 
 class Node2Vec:
@@ -210,7 +211,7 @@ class Node2Vec:
         num_walks_lists = np.array_split(range(self.num_walks), self.workers)
 
         walk_results = Parallel(n_jobs=self.workers, temp_folder=self.temp_folder, require=self.require)(
-            delayed(parallel_generate_walks)(self.d_graph,
+            delayed(self.parallel_generate_walks)(self.d_graph,
                                              self.walk_length,
                                              len(num_walks),
                                              idx,
@@ -285,4 +286,86 @@ class Node2Vec:
         # for fof_edge in intersection:
         #     if fof_edge[1] != node:
         #         timestamp = fof_edge[2]["weight"]
+
+
+
+    def parallel_generate_walks(self, d_graph, global_walk_length, num_walks, cpu_num, sampling_strategy=None,
+                                num_walks_key=None, walk_length_key=None, neighbors_key=None, probabilities_key=None,
+                                first_travel_key=None, quiet=False):
+
+
+        """
+        Generates the random walks which will be used as the skip-gram input.
+        :return: List of walks. Each walk is a list of nodes.
+        """
+
+        walks = list()
+        if not quiet:
+            pbar = tqdm(total=num_walks, desc='Generating walks (CPU: {})'.format(cpu_num))
+
+        for n_walk in range(num_walks):
+
+            # Update progress bar
+            if not quiet:
+                pbar.update(1)
+
+            # Shuffle the nodes
+            shuffled_nodes = list(d_graph.keys())
+            shuffle(shuffled_nodes)
+            for source in shuffled_nodes:
+                if source in self.cold_starts:
+                    new_source_list = self.find_fof(source)
+                    for elem in new_source_list:
+                        walk = self.single_node_random_walk(elem, sampling_strategy, num_walks_key, n_walk, walk_length_key,
+                                           global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key)
+                else:
+                    walk = self.single_node_random_walk(source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
+                                                        global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key)
+
+                walks.append(walk)
+
+        if not quiet:
+            pbar.close()
+
+        return walks
+
+
+    def single_node_random_walk(self, source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
+                                global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key):
+        # Start a random walk at the source node
+        # Skip nodes with specific num_walks
+        if source in sampling_strategy and \
+            num_walks_key in sampling_strategy[source] and \
+            sampling_strategy[source][num_walks_key] <= n_walk:
+            return
+
+        # Start walk
+        walk = [source]
+
+        # Calculate walk length
+        if source in sampling_strategy:
+            walk_length = sampling_strategy[source].get(walk_length_key, global_walk_length)
+        else:
+            walk_length = global_walk_length
+
+        # Perform walk
+        while len(walk) < walk_length:
+
+            walk_options = d_graph[walk[-1]].get(neighbors_key, None)
+
+            # Skip dead end nodes
+            if not walk_options:
+                break
+
+            if len(walk) == 1:  # For the first step
+                probabilities = d_graph[walk[-1]][first_travel_key]
+                walk_to = np.random.choice(walk_options, size=1, p=probabilities)[0]
+            else:
+                probabilities = d_graph[walk[-1]][probabilities_key][walk[-2]]
+                walk_to = np.random.choice(walk_options, size=1, p=probabilities)[0]
+
+            walk.append(walk_to)
+
+        walk = list(map(str, walk))  # Convert all to strings
+        return walk
 
