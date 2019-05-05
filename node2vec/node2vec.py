@@ -317,10 +317,10 @@ class Node2Vec:
                     new_source_list = self.find_fof(source)
                     for elem in new_source_list:
                         walk = self.single_node_random_walk(elem, sampling_strategy, num_walks_key, n_walk, walk_length_key,
-                                           global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key)
+                                           global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=True, real_start_node=source)
                 else:
                     walk = self.single_node_random_walk(source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
-                                                        global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key)
+                                                        global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=False, real_start_node=None)
 
                 walks.append(walk)
 
@@ -331,7 +331,7 @@ class Node2Vec:
 
 
     def single_node_random_walk(self, source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
-                                global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key):
+                                global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=False, real_start_node=None):
         # Start a random walk at the source node
         # Skip nodes with specific num_walks
         if source in sampling_strategy and \
@@ -340,7 +340,10 @@ class Node2Vec:
             return
 
         # Start walk
-        walk = [source]
+        if cold_start is False:
+            walk = [source]
+        else:
+            walk = [real_start_node]
 
         # Calculate walk length
         if source in sampling_strategy:
