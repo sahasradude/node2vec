@@ -5,7 +5,9 @@ from gensim.models import KeyedVectors
 from joblib import Parallel, delayed, load, dump
 from tqdm import tqdm
 from parallel import parallel_generate_walks
+import pandas as pd
 import networkx as nx
+from random import sample
 
 
 class Node2Vec:
@@ -23,7 +25,7 @@ class Node2Vec:
     Q_KEY = 'q'
 
 
-    def __init__(self, graph, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='weight',
+    def __init__(self, filename, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='weight',
                  workers=1, sampling_strategy=None, quiet=False, temp_folder=None, is_temporal=False, model_file=None):
         """
         Initiates the Node2Vec object, precomputes walking probabilities and generates the walks.
@@ -49,9 +51,12 @@ class Node2Vec:
         :param temp_folder: Path to folder with enough space to hold the memory map of self.d_graph (for big graphs); to be passed joblib.Parallel.temp_folder
         :type temp_folder: str
         """
+        self.has_cold_started = set()
+        self.cold_started_with = defaultdict(list)
 
+        self.filename = filename
 
-        self.graph = graph
+        self.graph = self.read_graph(filename)
         self.dimensions = dimensions
         self.walk_length = walk_length
         self.num_walks = num_walks
@@ -96,6 +101,15 @@ class Node2Vec:
         :return:
 
         """
+
+        df1 = pd.read_csv(self.filename, names=['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
+
+        # all the connections
+        for index, row in df1.iterrows():
+            if row["v1"] not in self.has_cold_started:
+                self.has_cold_started.add(row["v1"])
+                self.cold_started_with[str(row["v2"])].append((str(row["v1"]), row["timestamp"]))
+
         for node in self.graph.nodes():
             if self.graph.out_degree(node) == 1:
                 self.cold_starts.add(node)
@@ -230,3 +244,45 @@ class Node2Vec:
             skip_gram_params['size'] = self.dimensions
 
         return gensim.models.Word2Vec(self.walks, **skip_gram_params)
+
+    def read_graph(self, filename):
+
+        try:
+            g = nx.read_weighted_edgelist(filename, create_using=nx.DiGraph())
+            return g
+        except FileNotFoundError:
+            print('This file does not exist or is corrupted')
+            return
+
+
+    def find_fof(self, node):
+        """
+        finds the "friend of friend node" for a given cold_start node
+        :param node: cold start node
+        :return: a sample of "friend of friend nodes"
+        """
+        #TODO:find which performs best, single random sample vs average of many random samples
+        g = self.graph
+        edge = list(g.edges(node, data=True))
+        friend_edge = edge
+        friend = friend_edge[0][1]
+
+        print("Friend =", friend)
+
+        fof_list = self.cold_started_with[friend]
+
+        print(fof_list)
+        print(node)
+
+        fof_set = set(elem[0] for elem in fof_list)
+
+        fof_set.remove(node)
+
+        if len(fof_set) == 0:
+            return [node]
+
+        return sample(fof_set, 1)
+        # for fof_edge in intersection:
+        #     if fof_edge[1] != node:
+        #         timestamp = fof_edge[2]["weight"]
+
