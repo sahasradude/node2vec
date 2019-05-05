@@ -268,12 +268,12 @@ class Node2Vec:
         friend_edge = edge
         friend = friend_edge[0][1]
 
-        print("Friend =", friend)
+        # print("Friend =", friend)
 
         fof_list = self.cold_started_with[friend]
 
-        print(fof_list)
-        print(node)
+        # print(fof_list)
+        # print(node)
 
         fof_set = set(elem[0] for elem in fof_list)
 

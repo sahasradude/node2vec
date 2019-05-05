@@ -3,6 +3,7 @@ import pandas as pd
 from node2vec import Node2Vec
 from gensim.models import KeyedVectors
 from collections import defaultdict
+from EvalUtils import EvalUtils
 
 g = nx.read_weighted_edgelist("../datasets/redditdataset_75.txt", create_using=nx.DiGraph())
 gtest= nx.read_weighted_edgelist("../datasets/redditdataset_test.txt", create_using=nx.DiGraph())
@@ -31,18 +32,26 @@ count = 0
 actual_links = set(gtest.edges)
 print(actual_links)
 preds = 0
+actual_list = []
+pred_list = []
 for key in all_connections.keys():
     if g.out_degree(key) != 1:
         continue
 
-
     try:
-        listobj = model.wv.most_similar(key)[:3]
+        listobj = model.wv.most_similar(key)[:10]
         nodes = [elem[0] for elem in listobj]
-        pred_edges = set([(key, node) for node in nodes])
-        print(pred_edges)
-        preds += len(actual_links.intersection(pred_edges))
+        pred_edges = [(key, node) for node in nodes]
+        pred_set = set(pred_edges)
+
+        preds += len(actual_links.intersection(pred_set))
+        pred_list.append(pred_edges)
+        actual_list.append(actual_links)
+
     except KeyError:
         continue
 
+
+
+print(EvalUtils.mapk(actual_list,pred_list,k=10))
 print(preds)
