@@ -106,18 +106,18 @@ class Node2Vec:
 
         """
 
-        df1 = pd.read_csv(self.filename, names=['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
+        df1 = pd.read_csv(self.filename, names=['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None, dtype=str)
 
         # all the connections
         for index, row in df1.iterrows():
-            self.time_dict[str(row["v1"])].append(row["timestamp"])
+            self.time_dict[str(row["v1"])].append(float(row["timestamp"]))
 
 
 
         for index, row in df1.iterrows():
             l = self.time_dict[str(row["v1"])]
             ts_last = l[len(l) - 1]
-            ts = row["timestamp"]
+            ts = float(row["timestamp"])
             row["timestamp"] = 1.0 / (1 + math.e ** (self.k * (abs(ts - ts_last) / ts_last) ))
 
             if row["v1"] not in self.has_cold_started:
@@ -286,8 +286,15 @@ class Node2Vec:
         if len(edges) == 0:
             return node
         s = sum([edge[2]["timestamp"] for edge in edges])
+        if s == 0:
+            print(edges)
+            prob_list = [1/len(edges) for edge in edges]
+
+        else:
+            prob_list = [edge[2]["timestamp"] / s for edge in edges]
+
         e = [edge[1] for edge in edges]
-        friend = choice(e, 1, p=[edge[2]["timestamp"] / s for edge in edges])[0]
+        friend = choice(e, 1, p=prob_list)[0]
 
         fof_list = list(g.edges(friend))
 
@@ -302,9 +309,6 @@ class Node2Vec:
             return [node]
 
         return sample(fof_set, 1)
-        # for fof_edge in intersection:
-        #     if fof_edge[1] != node:
-        #         timestamp = fof_edge[2]["weight"]
 
 
 
@@ -343,10 +347,12 @@ class Node2Vec:
                         walks.append(walk)
                     except:
                         rand = 0
-                        pass
+
                 elif rand <= prob:
 
                     new_source_list = self.find_fof(source)
+                    if type(new_source_list) is not list:
+                        new_source_list = [new_source_list]
                     for elem in new_source_list:
                         try:
                             walk = self.single_node_random_walk(elem, sampling_strategy, num_walks_key, n_walk, walk_length_key,
