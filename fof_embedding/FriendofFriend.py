@@ -3,9 +3,8 @@ from collections import defaultdict
 import numpy as np
 import gensim, os
 from gensim.models import KeyedVectors
-from joblib import Parallel, delayed, load, dump
+from joblib import Parallel, delayed
 from tqdm import tqdm
-# from parallel import parallel_generate_walks
 import pandas as pd
 import networkx as nx
 import random
@@ -14,11 +13,11 @@ from random import shuffle
 from numpy.random import choice
 
 
-class Node2Vec:
+class FriendOfFriend:
     """
-    Given the entire history of the graph, see which nodes are cold starts right now, and which ones are not, and
-    generate either our embedding, or node2vec
+    Finds the friend of friend temporal embedding for a directed temporal graph
     """
+
     FIRST_TRAVEL_KEY = 'first_travel_key'
     PROBABILITIES_KEY = 'probabilities'
     NEIGHBORS_KEY = 'neighbors'
@@ -31,30 +30,7 @@ class Node2Vec:
 
     def __init__(self, filename, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='timestamp',
                  workers=1, sampling_strategy=None, quiet=False, temp_folder=None, is_temporal=False, model_file=None):
-        """
-        Initiates the Node2Vec object, precomputes walking probabilities and generates the walks.
 
-        :param graph: Input graph
-        :type graph: Networkx Graph
-        :param dimensions: Embedding dimensions (default: 128)
-        :type dimensions: int
-        :param walk_length: Number of nodes in each walk (default: 80)
-        :type walk_length: int
-        :param num_walks: Number of walks per node (default: 10)
-        :type num_walks: int
-        :param p: Return hyper parameter (default: 1)
-        :type p: float
-        :param q: Inout parameter (default: 1)
-        :type q: float
-        :param weight_key: On weighted graphs, this is the key for the weight attribute (default: 'weight')
-        :type weight_key: str
-        :param workers: Number of workers for parallel execution (default: 1)
-        :type workers: int
-        :param sampling_strategy: Node specific sampling strategies, supports setting node specific 'q', 'p', 'num_walks' and 'walk_length'.
-        Use these keys exactly. If not set, will use the global ones which were passed on the object initialization
-        :param temp_folder: Path to folder with enough space to hold the memory map of self.d_graph (for big graphs); to be passed joblib.Parallel.temp_folder
-        :type temp_folder: str
-        """
         self.has_cold_started = set()
         self.cold_started_with = defaultdict(list)
 
@@ -101,9 +77,8 @@ class Node2Vec:
 
     def _initialize_structures(self):
         """
-        initialize the forward and reverse dictionaries for the current graph
+        initialize graph, make cold_start dict, timestamp dict, make temporal weighting for timestamps
         :return:
-
         """
 
         df1 = pd.read_csv(self.filename, names=['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None, dtype=str)
@@ -118,7 +93,7 @@ class Node2Vec:
             l = self.time_dict[str(row["v1"])]
             ts_last = l[len(l) - 1]
             ts = float(row["timestamp"])
-            row["timestamp"] = 1.0 / (1 + math.e ** (self.k * (abs(ts - ts_last) / ts_last) ))
+            row["timestamp"] = 1.0 / (math.e ** (self.k * (abs(ts - ts_last) / ts_last) ))
 
             if row["v1"] not in self.has_cold_started:
                 self.has_cold_started.add(row["v1"])
@@ -143,17 +118,6 @@ class Node2Vec:
         else:
             self.model = KeyedVectors.load(self.model_file, mmap='r')
             self.embeddings = KeyedVectors.load(self.embedding_file, mmap='r')
-
-
-
-
-
-
-    def maintain_embeddings(self):
-        """
-        figures out when a node stops being cold start, and recomputes its embedding using node2vec
-        :return:
-        """
 
     def _precompute_probabilities(self):
 
@@ -251,7 +215,7 @@ class Node2Vec:
     def fit(self, **skip_gram_params):
         """
         Creates the embeddings using gensim's Word2Vec.
-        :param skip_gram_params: Parameteres for gensim.models.Word2Vec - do not supply 'size' it is taken from the Node2Vec 'dimensions' parameter
+        :param skip_gram_params: Parameteres for gensim.models.Word2Vec - do not supply 'size' it is taken from the FriendOfFriend 'dimensions' parameter
         :type skip_gram_params: dict
         :return: A gensim word2vec model
         """
@@ -287,7 +251,6 @@ class Node2Vec:
             return node
         s = sum([edge[2]["timestamp"] for edge in edges])
         if s == 0:
-            print(edges)
             prob_list = [1/len(edges) for edge in edges]
 
         else:
@@ -298,13 +261,9 @@ class Node2Vec:
 
         fof_list = list(g.edges(friend))
 
-        # print(fof_list)
-        # print(node)
-
         fof_set = set(elem[0] for elem in fof_list)
 
         fof_set.difference_update(set(node))
-
         if len(fof_set) == 0:
             return [node]
 
