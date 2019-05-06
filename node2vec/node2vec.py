@@ -318,11 +318,12 @@ class Node2Vec:
                     for elem in new_source_list:
                         walk = self.single_node_random_walk(elem, sampling_strategy, num_walks_key, n_walk, walk_length_key,
                                            global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=True, real_start_node=source)
+                        walks.append(walk)
                 else:
                     walk = self.single_node_random_walk(source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
                                                         global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=False, real_start_node=None)
 
-                walks.append(walk)
+                    walks.append(walk)
 
         if not quiet:
             pbar.close()
