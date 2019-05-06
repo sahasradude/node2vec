@@ -5,27 +5,27 @@ from gensim.models import KeyedVectors
 from collections import defaultdict
 from EvalUtils import EvalUtils
 
-g = nx.read_weighted_edgelist("../datasets/redditdataset_75.txt", create_using=nx.DiGraph())
-gtest= nx.read_weighted_edgelist("../datasets/redditdataset_test.txt", create_using=nx.DiGraph())
-df1 = pd.read_csv('../datasets/redditdataset_75.txt', names = ['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
-df2 = pd.read_csv('../datasets/redditdataset_test.txt', names = ['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
+# g = nx.read_weighted_edgelist("../datasets/redditdataset_75.txt", create_using=nx.DiGraph())
+# gtest= nx.read_weighted_edgelist("../datasets/redditdataset_test.txt", create_using=nx.DiGraph())
+# df1 = pd.read_csv('../datasets/redditdataset_75.txt', names = ['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
+# df2 = pd.read_csv('../datasets/redditdataset_test.txt', names = ['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
+# node2vec = Node2Vec(filename='../datasets/redditdataset_75.txt', is_temporal=True, walk_length=8)  # Use temp_folder for big graphs
 
-node2vec = Node2Vec(filename='../datasets/redditdataset_75.txt', is_temporal=True)  # Use temp_folder for big graphs
-#model = KeyedVectors.load('somewhere',mmap = 'r')
+
+g = nx.read_weighted_edgelist("../datasets/collegedataset_75.txt", create_using=nx.DiGraph())
+gtest= nx.read_weighted_edgelist("../datasets/collegedataset_test.txt", create_using=nx.DiGraph())
+df1 = pd.read_csv('../datasets/collegedataset_75.txt', names = ['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
+df2 = pd.read_csv('../datasets/collegedataset_test.txt', names = ['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None)
+node2vec = Node2Vec(filename='../datasets/collegedataset_75.txt', is_temporal=True, walk_length=8)  # Use temp_folder for big graphs
+
+
+
+
 model = node2vec.fit(window=10, min_count=1, batch_words=4)  # Any keywords acceptable by gensim.Word2Vec can be passed, `diemnsions` and `workers` are automatically passed (from the Node2Vec constructor)
 
 all_connections = defaultdict(list)
 for index, row in df1.iterrows():
-        all_connections[row["v1"]].append((row["v2"]))
-
-
-#all_connections_test = defaultdict(list)
-# for index, row in df2.iterrows():
-#     if row["v1"] not in all_connections:
-#         all_connections_test[row["v1"]].append((row["v2"]))
-#     else:
-#         all_connections[row["v1"]].append((row["v2"]))
-
+    all_connections[row["v1"]].append((row["v2"]))
 
 predicted = defaultdict(list)
 count = 0

@@ -1,3 +1,4 @@
+import math
 from collections import defaultdict
 import numpy as np
 import gensim, os
@@ -7,8 +8,10 @@ from tqdm import tqdm
 # from parallel import parallel_generate_walks
 import pandas as pd
 import networkx as nx
+import random
 from random import sample
 from random import shuffle
+from numpy.random import choice
 
 
 class Node2Vec:
@@ -19,14 +22,14 @@ class Node2Vec:
     FIRST_TRAVEL_KEY = 'first_travel_key'
     PROBABILITIES_KEY = 'probabilities'
     NEIGHBORS_KEY = 'neighbors'
-    WEIGHT_KEY = 'weight'
+    WEIGHT_KEY = 'timestamp'
     NUM_WALKS_KEY = 'num_walks'
     WALK_LENGTH_KEY = 'walk_length'
     P_KEY = 'p'
     Q_KEY = 'q'
 
 
-    def __init__(self, filename, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='weight',
+    def __init__(self, filename, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='timestamp',
                  workers=1, sampling_strategy=None, quiet=False, temp_folder=None, is_temporal=False, model_file=None):
         """
         Initiates the Node2Vec object, precomputes walking probabilities and generates the walks.
@@ -57,7 +60,6 @@ class Node2Vec:
 
         self.filename = filename
 
-        self.graph = self.read_graph(filename)
         self.dimensions = dimensions
         self.walk_length = walk_length
         self.num_walks = num_walks
@@ -68,12 +70,13 @@ class Node2Vec:
         self.quiet = quiet
         self.d_graph = defaultdict(dict)
         self.is_temporal = is_temporal
-
+        self.k = 5
         self.cold_starts = set()
         self.model = None
         self.embeddings = None
         self.model_file = model_file
-
+        self.time_dict = defaultdict(list)
+        self.timestamps = dict()
         if model_file is not None:
             if not os.path.exists(model_file):
                 print("Model file path does not exist, please check model file path and try again")
@@ -107,9 +110,22 @@ class Node2Vec:
 
         # all the connections
         for index, row in df1.iterrows():
+            self.time_dict[str(row["v1"])].append(row["timestamp"])
+
+
+
+        for index, row in df1.iterrows():
+            l = self.time_dict[str(row["v1"])]
+            ts_last = l[len(l) - 1]
+            ts = row["timestamp"]
+            row["timestamp"] = 1.0 / (1 + math.e ** (self.k * (abs(ts - ts_last) / ts_last) ))
+
             if row["v1"] not in self.has_cold_started:
                 self.has_cold_started.add(row["v1"])
                 self.cold_started_with[str(row["v2"])].append((str(row["v1"]), row["timestamp"]))
+
+
+        self.graph = self.read_graph(df1)
 
         for node in self.graph.nodes():
             if self.graph.out_degree(node) == 1:
@@ -127,6 +143,8 @@ class Node2Vec:
         else:
             self.model = KeyedVectors.load(self.model_file, mmap='r')
             self.embeddings = KeyedVectors.load(self.embedding_file, mmap='r')
+
+
 
 
 
@@ -246,10 +264,10 @@ class Node2Vec:
 
         return gensim.models.Word2Vec(self.walks, **skip_gram_params)
 
-    def read_graph(self, filename):
+    def read_graph(self, df):
 
         try:
-            g = nx.read_weighted_edgelist(filename, create_using=nx.DiGraph())
+            g = nx.from_pandas_edgelist(df, "v1", "v2", edge_attr=True, create_using=nx.DiGraph())
             return g
         except FileNotFoundError:
             print('This file does not exist or is corrupted')
@@ -264,20 +282,21 @@ class Node2Vec:
         """
         #TODO:find which performs best, single random sample vs average of many random samples
         g = self.graph
-        edge = list(g.edges(node, data=True))
-        friend_edge = edge
-        friend = friend_edge[0][1]
+        edges = list(g.edges(node, data=True))
+        if len(edges) == 0:
+            return node
+        s = sum([edge[2]["timestamp"] for edge in edges])
+        e = [edge[1] for edge in edges]
+        friend = choice(e, 1, p=[edge[2]["timestamp"] / s for edge in edges])[0]
 
-        # print("Friend =", friend)
-
-        fof_list = self.cold_started_with[friend]
+        fof_list = list(g.edges(friend))
 
         # print(fof_list)
         # print(node)
 
         fof_set = set(elem[0] for elem in fof_list)
 
-        fof_set.remove(node)
+        fof_set.difference_update(set(node))
 
         if len(fof_set) == 0:
             return [node]
@@ -313,16 +332,28 @@ class Node2Vec:
             shuffled_nodes = list(d_graph.keys())
             shuffle(shuffled_nodes)
             for source in shuffled_nodes:
-                if source in self.cold_starts:
+                # TODO: Remove and uncomment below after testing
+                prob = 1/(1+self.graph.out_degree(source))
+
+                rand = random.uniform(0,1)
+                if rand > prob:
+                    try:
+                        walk = self.single_node_random_walk(source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
+                                                            global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=False, real_start_node=None)
+                        walks.append(walk)
+                    except:
+                        rand = 0
+                        pass
+                elif rand <= prob:
+
                     new_source_list = self.find_fof(source)
                     for elem in new_source_list:
-                        walk = self.single_node_random_walk(elem, sampling_strategy, num_walks_key, n_walk, walk_length_key,
-                                           global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=True, real_start_node=source)
-                else:
-                    walk = self.single_node_random_walk(source, sampling_strategy, num_walks_key, n_walk, walk_length_key,
-                                                        global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=False, real_start_node=None)
-
-                walks.append(walk)
+                        try:
+                            walk = self.single_node_random_walk(elem, sampling_strategy, num_walks_key, n_walk, walk_length_key,
+                                                        global_walk_length, d_graph, neighbors_key, first_travel_key, probabilities_key, cold_start=True, real_start_node=source)
+                            walks.append(walk)
+                        except:
+                            pass
 
         if not quiet:
             pbar.close()
