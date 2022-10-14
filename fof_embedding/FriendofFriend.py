@@ -28,14 +28,14 @@ class FriendOfFriend:
     Q_KEY = 'q'
 
 
-    def __init__(self, filename, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='timestamp',
+    def __init__(self, df, k = 5, dimensions=128, walk_length=80, num_walks=10, p=1, q=1, weight_key='timestamp',
                  workers=1, sampling_strategy=None, quiet=False, temp_folder=None, is_temporal=False, model_file=None):
 
         self.has_cold_started = set()
         self.cold_started_with = defaultdict(list)
 
-        self.filename = filename
-
+        #self.filename = filename
+        self.df = df
         self.dimensions = dimensions
         self.walk_length = walk_length
         self.num_walks = num_walks
@@ -46,7 +46,7 @@ class FriendOfFriend:
         self.quiet = quiet
         self.d_graph = defaultdict(dict)
         self.is_temporal = is_temporal
-        self.k = 5
+        self.k = k
         self.cold_starts = set()
         self.model = None
         self.embeddings = None
@@ -81,7 +81,7 @@ class FriendOfFriend:
         :return:
         """
 
-        df1 = pd.read_csv(self.filename, names=['v1','v2','timestamp'],sep = '\t',lineterminator='\n',header = None, dtype=str)
+        df1 = self.df
 
         # all the connections
         for index, row in df1.iterrows():

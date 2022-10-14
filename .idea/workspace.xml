@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="38e78c04-503e-4628-81ed-c0d614e14af8" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/fof_embedding/FriendofFriend.py" beforeDir="false" afterPath="$PROJECT_DIR$/fof_embedding/FriendofFriend.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>_generate_walks</find>
+      <find>neighbo</find>
+      <find>cold</find>
+      <find>test_node</find>
+      <find>print</find>
+      <find>str</find>
+      <find>decode</find>
+      <find>FOF</find>
+      <find>college</find>
+      <find>sample</find>
+      <find>walks.append</find>
+      <find>/2</find>
+      <find>read_graph</find>
+      <find>def parall</find>
+      <find>self.fil</find>
+      <find>self.filxxx</find>
+      <find>read_ra</find>
+      <find>g</find>
+      <find>filename</find>
+      <find>df1</find>
+      <find>df</find>
+      <find>filenam</find>
+      <find>node2</find>
+      <find>num_walks</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/node2vec/utils.py" />
+        <option value="$PROJECT_DIR$/datasets/test_node2vec.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
+        <option value="$PROJECT_DIR$/test_node2vec.py" />
+        <option value="$PROJECT_DIR$/node2vec/test.py" />
+        <option value="$PROJECT_DIR$/node2vec/node2vec.py" />
+        <option value="$PROJECT_DIR$/node2vec/testeverything.py" />
+        <option value="$PROJECT_DIR$/fof_embedding/testeverything.py" />
+        <option value="$PROJECT_DIR$/fof_embedding/FriendofFriend.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="15" />
+    <option name="y" value="30" />
+    <option name="width" value="1890" />
+    <option name="height" value="960" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="node2vec" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node2vec" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node2vec" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node2vec" type="462c0819:PsiDirectoryNode" />
+              <item name=".pytest_cache" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node2vec" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node2vec" type="462c0819:PsiDirectoryNode" />
+              <item name="datasets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node2vec" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node2vec" type="462c0819:PsiDirectoryNode" />
+              <item name="fof_embedding" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node2vec" type="b2602c69:ProjectViewProjectNode" />
+              <item name="node2vec" type="462c0819:PsiDirectoryNode" />
+              <item name="node2vec" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="node2vec" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Python" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Documents\GitHub\node2vec\fof_embedding" />
+      <recent name="C:\Users\user\Documents\GitHub\node2vec" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.testeverything">
+    <configuration name="Unnamed" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="node2vec" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\user\Anaconda3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="node2vec" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="node2vec" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/node2vec" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/node2vec/node2vec.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="node2vec" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/node2vec" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/node2vec/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="testeverything" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="node2vec" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/node2vec" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\Users\user\Documents\GitHub\node2vec\fof_embedding\testeverything.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="utils" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="node2vec" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/node2vec" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/node2vec/utils.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="pytest in C:/Users/user/Documents/GitHub/node2vec/test_node2vec.py" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="node2vec" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/test_node2vec.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.Unnamed" />
+      <item itemvalue="Python.node2vec" />
+      <item itemvalue="Python.test" />
+      <item itemvalue="Python.testeverything" />
+      <item itemvalue="Python.utils" />
+      <item itemvalue="Python tests.pytest in C:/Users/user/Documents/GitHub/node2vec/test_node2vec.py" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.testeverything" />
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python tests.pytest in C:/Users/user/Documents/GitHub/node2vec/test_node2vec.py" />
+        <item itemvalue="Python.utils" />
+        <item itemvalue="Python.node2vec" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="38e78c04-503e-4628-81ed-c0d614e14af8" name="Default Changelist" comment="" />
+      <created>1556941569490</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1556941569490</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="pytest_in_test_node2vec_py - 2019.05.04 at 19h 07m 27s.xml">
+      <configuration name="pytest in test_node2vec.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_test_node2vec_py - 2019.05.04 at 22h 38m 56s.xml">
+      <configuration name="pytest in test_node2vec.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="pytest_in_test_node2vec_py - 2019.05.04 at 22h 39m 18s.xml">
+      <configuration name="pytest in test_node2vec.py" configurationId="tests" />
+    </history-entry>
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8005319" visible="true" weight="0.16759333" />
+      <window_info id="Structure" order="1" sideWeight="0.19946809" side_tool="true" visible="true" weight="0.16759333" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.86814934" weight="0.33333334" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4988086" weight="0.32978722" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.4980143" weight="0.32978722" />
+      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49245432" weight="0.32978722" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.13185067" side_tool="true" visible="true" weight="0.33333334" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.8975377" weight="0.2570922" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
+    <entry file="file://$PROJECT_DIR$/test_node2vec.py" />
+    <entry file="file://$PROJECT_DIR$/node2vec/parallel.py" />
+    <entry file="file://$PROJECT_DIR$/node2vec/utils.py" />
+    <entry file="file://$PROJECT_DIR$/node2vec/run.py" />
+    <entry file="file://$PROJECT_DIR$/node2vec/test.py" />
+    <entry file="file://$PROJECT_DIR$/node2vec/edges.py" />
+    <entry file="file://$PROJECT_DIR$/node2vec/EvalUtils.py" />
+    <entry file="file://$PROJECT_DIR$/node2vec/node2vec.py" />
+    <entry file="file://$PROJECT_DIR$/fof_embedding/setup.cfg">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fof_embedding/testeverything.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="30" column="48" selection-start-line="30" selection-start-column="48" selection-end-line="30" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fof_embedding/FriendofFriend.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="82">
+          <caret line="50" column="25" selection-start-line="50" selection-start-column="25" selection-end-line="50" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fof_embedding/test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/datasets/collegedataset_test.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+  </component>
+</project>
